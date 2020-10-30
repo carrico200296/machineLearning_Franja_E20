@@ -1,6 +1,5 @@
 """
-Regression analysis of the two datasets
-
+Classification analysis
 Created: 19.10.2020
 """
 
