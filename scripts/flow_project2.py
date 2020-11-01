@@ -15,18 +15,23 @@ import sklearn.linear_model as lm
 from matplotlib.pylab import figure, semilogx, loglog, xlabel, ylabel, legend, title, subplot, show, grid
 
 from CrossValidation import twoLevelCV
-from toolbox_02450 import rlr_validate
+from regularization import rlr_validate
 
 # -------------------------------------------------------
 # Define input and output matrices that are to be used 
 xIn = X_stand
 yIn = y_stand
 
-
 # REGRESSION, PART A. 2nd point-------------------------------------------------------
+
+# Add offset attribute
+xIn = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
+attributeNames = [u'Offset']+attributeNames
+M = M+1
+
 # Values of lambda
 lambdas = np.power(10.,range(-4,9))
-opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(X_stand, y_stand, lambdas, 10)
+opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xIn, yIn, lambdas, 10)
 
 # Display the results for the last cross-validation fold
 figure(1, figsize=(12,8))
@@ -53,9 +58,8 @@ grid()
 # Define the models
 model1 = lm.LinearRegression(fit_intercept=False) # fir_intercept = False because centered data
 model2 = lm.LinearRegression(fit_intercept=False) # for testing the function
-# model3
 
 # Put the models together in a list for comparation
 modelsToCompare = [model1, model2]
-estimatedGenError, best_model_idx = twoLevelCV(X_stand, y_stand, modelsToCompare, K1=10, K2=10)
+estimatedGenError, best_model_idx = twoLevelCV(xIn, yIn, modelsToCompare, K1=10, K2=10)
 # -----------------------------------------------------------------------------------
