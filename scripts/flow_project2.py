@@ -61,5 +61,5 @@ model2 = lm.LinearRegression(fit_intercept=False) # for testing the function
 
 # Put the models together in a list for comparation
 modelsToCompare = [model1, model2]
-estimatedGenError, best_model_idx = twoLevelCV(xIn, yIn, modelsToCompare, K1=10, K2=10)
+estimatedGenError = twoLevelCV(xIn, yIn, modelsToCompare, K1=10, K2=10)
 # -----------------------------------------------------------------------------------
