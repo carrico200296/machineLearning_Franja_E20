@@ -6,9 +6,11 @@ from the variables available in the config file.
 Number of classes in the compared data sets must be the same!
 Input: config py file and input matrices.
 Output: PCA plots and output matrices
+        
 
 Authors: Vice Roncevic - s190075, Carlos Ribera - S192340, Mu Zhou - s202718
 Created: 03.10.2020
+Edited by: Vice, 01.11.2020 - added projected dataset export
 """
 
 # -------------------------------------------------------
@@ -258,14 +260,14 @@ for k in range(2):
 
 plt.show()
 
+# Compute the projection onto the principal components for D1 and D2
+Z_D1 = xInFirst @ V_D1
+Z_D2 = xInSecond @ V_D2
+
 # --------------------------------------------------------------------------
 # Plot 3D projection on 3 principal components
 
 pcs = [0,1,2]
-
-# Compute the projection onto the principal components for D1 and D2
-Z_D1 = xInFirst @ V_D1;
-Z_D2 = xInSecond @ V_D2;
 
 # 3D scatter plot for D1 projected in the first 3 PC
 f = plt.figure()
@@ -299,3 +301,10 @@ ax.set_ylabel('PC'+str(pcs[1]+1), fontsize = 12)
 ax.set_zlabel('PC'+str(pcs[2]+1), fontsize = 12)
 ax.set_title('Projection of the standardized data in the first 3 PC - concNoZeros', fontsize = 12)
 plt.show()
+
+
+# --------------------------------------------------------------------------
+# Export the projected data in first n principal compontents
+pcUsed = 6
+Z_D1_out = Z_D1[:, :pcUsed]
+Z_D2_out = Z_D2[:, :pcUsed]
