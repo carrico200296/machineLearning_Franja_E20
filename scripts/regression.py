@@ -24,14 +24,14 @@ def x_add_features(xIn, yIn):
     # -------------------------------------------------------
     # Additional nonlinear attributes features
     # First two attributes squared, for example
-    Xf1 = np.power(xIn[:, 1],2).reshape(-1,1)
-    Xf2 = np.power(xIn[:, 2],2).reshape(-1,1)
+    Xf1 = np.power(xIn[:, 1], 2).reshape(-1,1)
+    Xf2 = np.power(xIn[:, 2], 2).reshape(-1,1)
     
     # Add the transformed features into the dataset
     xAddFeat = np.asarray(np.bmat('xIn, Xf1, Xf2'))
     yOut = yIn # For traceability
     
-    return xAddFeat, yOut
+    return xAddFeat, yOut 
 
 def x_tilda_poly(xIn, yIn):
     
@@ -70,17 +70,22 @@ def x_tilda_transform(xIn, yIn):
 
     return xTildaTrans, yOut
 
+
 # -------------------------------------------------------
 # Define input and output 
-xIn, yIn = X_stand, y_stand
+xIn = Z_D2_out 
+yIn = y_stand
 
 # Simple holdout-set crossvalidation
 test_proportion = 0.5
-X_train, X_test, y_train, y_test = model_selection.train_test_split(xIn,yIn,test_size=test_proportion)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(xIn, yIn, test_size = test_proportion)
 
 # Choose a number of features taken in by the regression model
 # If the number is larger than then number attributes = collumns, numpy will take all the collumns!
 print("Number of available attributes: {0}".format(xIn.shape[1]))
+
+
+# TO DO create a algorithm that will use only specific features in data set not necesserily in order
 
 Km = 6
 print("Number of attributes used in the lin.reg.model: {0}".format(Km))
@@ -99,7 +104,7 @@ plot(observations, y_est_test,'-') # Plot the predictions
 plot(observations, y_test,'.') # Plot the nominal values
 
 xlabel('N - Observations'); ylabel('y - Value')
-legend(['"Training data', 'Regression fit (model) Km={0}'.format(Km)])
+legend(['Regression fit (model) Km={0}'.format(Km), 'Test data',])
 show()
 
 # Plot the residuals
@@ -108,5 +113,5 @@ hist(residuals, 40)
 xlabel("Residual value"); ylabel("Occurence")
 show()
 
-print("Mean residual value: {0}".format(np.round(np.mean(residuals),4))) 
+print("Mean residual value: {0}".format(np.round(np.mean(residuals), 4))) 
 
