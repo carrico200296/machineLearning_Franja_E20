@@ -14,8 +14,8 @@ Created: 27.09.2020
 #os.chdir(r'E:\Vice\01. Active_courses\02450\Reports\Scripts')
 
 # Import configuration file that determines the dataset to plot
-#from concRaw_config import *
-from concNoZero_config import *
+from concRaw_config import *
+#from concNoZero_config import *
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,7 +25,7 @@ import math
 # -------------------------------------------------------
 # Define input and output matrices that are to be used for plots
 xIn = X_stand
-yIn = y_stand
+yIn = y_noOut
 
 # -------------------------------------------------------
 # Initial matrix plots to access the data
