@@ -69,6 +69,9 @@ y = np.array(doc.col_values(column_count-1,1,row_count)).T
 # To avoid column vector, create N x 1 matrix
 y = y.reshape(np.shape(y)[0],1)
 
+# Compute the value N
+N = len(y)
+
 
 
 
