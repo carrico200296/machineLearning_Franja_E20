@@ -74,7 +74,7 @@ def x_tilda_transform(xIn, yIn):
 # -------------------------------------------------------
 # Define input and output 
 xIn = Z_D2_out 
-yIn = y_stand
+yIn = y_noOut
 
 # Simple holdout-set crossvalidation
 test_proportion = 0.5
@@ -87,7 +87,7 @@ print("Number of available attributes: {0}".format(xIn.shape[1]))
 
 # TO DO create a algorithm that will use only specific features in data set not necesserily in order
 
-Km = 6
+Km = 8
 print("Number of attributes used in the lin.reg.model: {0}".format(Km))
 model = lm.LinearRegression(fit_intercept=True)
 model = model.fit(X_train[:, :Km], y_train)
