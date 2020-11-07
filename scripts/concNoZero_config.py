@@ -16,7 +16,7 @@ from preProcessing import *
 from loadDataSet import *
 
 # -------------------------------------------------------
-# Import RAW data
+# Step 1: Import RAW data
 xIn = X
 yIn = y
 
@@ -25,7 +25,7 @@ yIn = y
 X_noZeros, y_noZeros, M, N, C = remove_zeros(xIn, yIn, attributeNames)
 
 # -------------------------------------------------------
-# Next step input
+# Step 2 input
 xIn = X_noZeros
 yIn = y_noZeros
 
@@ -33,7 +33,7 @@ yIn = y_noZeros
 X_noOut, y_noOut, M, N, C = remove_outliers(xIn, yIn, N, attributeNames)
 
 # -------------------------------------------------------
-# Next step input
+# Step 3 input
 xIn = X_noOut
 yIn = y_noOut
 
@@ -42,7 +42,7 @@ yIn = y_noOut
 X_cent, X_stand, y_fromStand, M, N, C = cent_and_stand(xIn, yIn, N, attributeNames)
 
 # -------------------------------------------------------
-# Next step input
+# Step 4 input
 xIn = X_stand
 yIn = y_fromStand
 
