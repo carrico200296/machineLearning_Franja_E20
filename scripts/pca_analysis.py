@@ -5,6 +5,7 @@ Usage: Update working directory and chose the config file with the data set. Def
 from the variables available in the config file.
 Number of classes in the compared data sets must be the same!
 Input: config py file and input matrices.
+       PCA analysis and output parameters: threshold and pcUsed
 Output: PCA plots and output matrices
         
 
@@ -13,62 +14,74 @@ Created: 03.10.2020
 Edited by: Vice, 01.11.2020 - added projected dataset export & created a plot functions
 """
 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.linalg import svd
+import numpy as np
+
+"""
 # -------------------------------------------------------
-# Import configuration file that determines the dataset to plot
+# Standard import header that determines the dataset to plot - comment in or out.
 # Take care that the order of imports and variable definition is in place!
+# Created for convenience 
 
 # Import 1. dataset - D1
 # Define input and output matrices that are to be used for plots
 from concRaw_config import *
 # Define input and output matrices that are to be used for plots
 xInFirst = X_stand
-yInFirst = y_stand
+yInFirst = y_fromStand
 yIn_classFirst = y_class
 
 # Import 2. dataset - D2
 from concNoZero_config import *
 # Define input and output vectors that are to be used for plots
 xInSecond = X_stand
-yInSecond = y_stand
+yInSecond = y_fromStand
 yIn_classSecond = y_class
+"""
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from scipy.linalg import svd
+def pca_compute(xInFirst, xInSecond, threshold, pcUsed):
+    
+    """
+    Do a general PCA analysis for 2 datasets. 
+    Output: computed PCs, projected data, variance explained and component load.
+    """
+    
+    # -------------------------------------------------------
+    # Compute the PCA by computing SVD of D1 and D2
+    
+    U_D1,S_D1,Vh_D1 = svd(xInFirst, full_matrices=False)
+    U_D2,S_D2,Vh_D2 = svd(xInSecond, full_matrices=False)
+    
+    V_D1 = Vh_D1.T
+    V_D1_round = np.around(V_D1,3)
+    
+    V_D2 = Vh_D2.T
+    V_D2_round = np.around(V_D2,3)
+    
+    # Compute variance explained by principal components
+    rho_D1 = (S_D1*S_D1) / (S_D1*S_D1).sum()
+    rho_D1_round = np.round(rho_D1,3)
+    rho_D2 = (S_D2*S_D2) / (S_D2*S_D2).sum() 
+    rho_D2_round = np.around(rho_D2,3)
+        
+    # --------------------------------------------------------------------------
+    # Export the projected data in first pcUsed principal compontents
+    
+    # Compute the projection onto the principal components for D1 and D2
+    Z_D1 = xInFirst @ V_D1
+    Z_D2 = xInSecond @ V_D2
+    
+    Z_D1_out = Z_D1[:, :pcUsed]
+    Z_D2_out = Z_D2[:, :pcUsed]
+    
+    return (Z_D1, Z_D2, Z_D1_out, Z_D2_out, rho_D1, rho_D2, V_D1, V_D2)
 
-# -------------------------------------------------------
-# Compute the PCA by computing SVD of D1 and D2
-
-U_D1,S_D1,Vh_D1 = svd(xInFirst, full_matrices=False)
-U_D2,S_D2,Vh_D2 = svd(xInSecond, full_matrices=False)
-
-V_D1 = Vh_D1.T
-V_D1_round = np.around(V_D1,3)
-
-V_D2 = Vh_D2.T
-V_D2_round = np.around(V_D2,3)
-
-# Compute variance explained by principal components
-rho_D1 = (S_D1*S_D1) / (S_D1*S_D1).sum()
-rho_D1_round = np.round(rho_D1,3)
-rho_D2 = (S_D2*S_D2) / (S_D2*S_D2).sum() 
-rho_D2_round = np.around(rho_D2,3)
-
-threshold = 0.95
-
-# --------------------------------------------------------------------------
-# Export the projected data in first pcUsed principal compontents
-pcUsed = 6
-
-# Compute the projection onto the principal components for D1 and D2
-Z_D1 = xInFirst @ V_D1
-Z_D2 = xInSecond @ V_D2
-
-Z_D1_out = Z_D1[:, :pcUsed]
-Z_D2_out = Z_D2[:, :pcUsed]
+# Z_D1, Z_D2, Z_D1_out, Z_D2_out, rho_D1, rho_D2, V_D1, V_D2 = pca_compute(xInFirst, xInSecond, threshold = 0.95, pcUsed = 6 )
 
 
-def pca_hist():
+def pca_hist(xRaw, attributeNames):
     
     # -------------------------------------------------------
     # Histogram of the attributes standard deviation
@@ -83,7 +96,7 @@ def pca_hist():
     
     return
 
-def pca_var_expl():
+def pca_var_expl(rho_D1, rho_D2, threshold):
       
     #-------------------------------------------------------
     #Plot variance explained by principal components (D1)
@@ -117,7 +130,7 @@ def pca_var_expl():
 
     return
 
-def pca_comp_load():
+def pca_comp_load(V_D1, V_D2, attributeNames):
     
     # -------------------------------------------------------------------------------
     # Plot PCA Component Loadings (D1) 
@@ -157,7 +170,7 @@ def pca_comp_load():
     
     return
 
-def pca_comp_coeff():
+def pca_comp_coeff(V_D1, V_D2, attributeNames):
 
     # --------------------------------------------------------------------------
     # Plot relevant PCA Component Coefficients (D1) - first n PC
@@ -201,7 +214,7 @@ def pca_comp_coeff():
 
     return
 
-def pca_analysis():
+def pca_analysis(xInFirst, xInSecond, yIn_classFirst, yIn_classSecond, threshold):
     
     #--------------------------------------------------------------------------
     # PCA analysis overview plot
@@ -290,7 +303,7 @@ def pca_analysis():
     
     return
 
-def pca_3D_plot():
+def pca_3D_plot(Z_D1, Z_D2, yIn_classFirst, yIn_classSecond, C):
 
     # --------------------------------------------------------------------------
     # Plot 3D projection on 3 principal components
@@ -310,7 +323,7 @@ def pca_3D_plot():
     ax.set_xlabel('PC'+str(pcs[0]+1), fontsize = 12)
     ax.set_ylabel('PC'+str(pcs[1]+1), fontsize = 12)
     ax.set_zlabel('PC'+str(pcs[2]+1), fontsize = 12)
-    ax.set_title('Projection of the centered data in the first 3 PC - concRaw ', fontsize = 12)
+    ax.set_title('Projection of standardized data in the first 3 PC - concRaw ', fontsize = 12)
     plt.show()
     
     

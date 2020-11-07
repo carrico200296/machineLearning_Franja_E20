@@ -13,8 +13,6 @@ import math
 # Import configuration file that determines the dataset to be used
 #from concRaw_config import *
 from concNoZero_config import *
-from pca_analysis import Z_D1_out, Z_D2_out
-
 
 # -------------------------------------------------------
 # Feature transformations to accomodate various linear regression methods
@@ -71,6 +69,25 @@ def x_tilda_transform(xIn, yIn):
     return xTildaTrans, yOut
 
 
+def x_tilda_downSample(xIn, yIn, features):
+    
+    # -------------------------------------------------------
+    # Consider only some features in the dataset
+    xTildaDown = np.zeros((xIn.shape[0], 1))
+                  
+    for i in range(np.size(features)):
+        x_temp = np.reshape(xIn[:, features[i]], (xIn[:, features[i]].shape[0], 1))
+        xTildaDown = np.append(xTildaDown, x_temp, axis = 1 )
+   
+    xTildaDown = np.delete(xTildaDown, 0, 1)
+    yOut = yIn # For traceability
+
+    return xTildaDown, yOut
+
+"""
+Could be a useful block of code....
+
+
 # -------------------------------------------------------
 # Define input and output 
 xIn = Z_D2_out 
@@ -83,9 +100,6 @@ X_train, X_test, y_train, y_test = model_selection.train_test_split(xIn, yIn, te
 # Choose a number of features taken in by the regression model
 # If the number is larger than then number attributes = collumns, numpy will take all the collumns!
 print("Number of available attributes: {0}".format(xIn.shape[1]))
-
-
-# TO DO create a algorithm that will use only specific features in data set not necesserily in order
 
 Km = 8
 print("Number of attributes used in the lin.reg.model: {0}".format(Km))
@@ -114,4 +128,4 @@ xlabel("Residual value"); ylabel("Occurence")
 show()
 
 print("Mean residual value: {0}".format(np.round(np.mean(residuals), 4))) 
-
+"""
