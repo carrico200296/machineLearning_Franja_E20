@@ -5,6 +5,11 @@ Created: 01.11.2020
 """
 import numpy as np
 from sklearn import model_selection
+import matplotlib.pyplot as plt
+from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, 
+                           title, subplot, show, grid)
+from regression import x_add_features
+
 
 def rlr_validate(xIn, yIn, lambdas, cvf):
     
@@ -70,3 +75,43 @@ def rlr_validate(xIn, yIn, lambdas, cvf):
     mean_w_vs_lambda = np.squeeze(np.mean(w,axis=1))
     
     return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
+
+
+# Import configuration file that determines the dataset to be used
+from concNoZero_config import *
+#from concRaw_config import *
+
+xIn, yIn = x_add_features(X_stand, y_fromStand)
+
+# -----------------------------------------------------------------------------------
+# REGRESSION, PART A. 2nd point-------------------------------------------------------
+# Add offset attribute
+xIn = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
+attributeNames = [u'Offset']+attributeNames
+M = M+1
+
+# Values of lambda
+lambdas = np.power(10.,range(-4,9))
+opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xIn, yIn, lambdas, 10)
+
+# Display the results for the last cross-validation fold
+figure(1, figsize=(12,8))
+subplot(1,2,1)
+semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
+xlabel('Regularization factor')
+ylabel('Mean Coefficient Values')
+grid()
+# You can choose to display the legend, but it's omitted for a cleaner 
+# plot, since there are many attributes
+legend(attributeNames[1:], loc='best')
+
+subplot(1,2,2)
+title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
+loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
+xlabel('Regularization factor')
+ylabel('Squared error (crossvalidation)')
+legend(['Train error','Validation error'])
+grid()
+# ---------
+
+
