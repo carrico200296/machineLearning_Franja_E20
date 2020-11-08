@@ -8,11 +8,12 @@ from sklearn import model_selection
 from matplotlib.pyplot import figure, plot, xlabel, ylabel, legend, show
 from matplotlib.pylab import subplot, hist
 import math
+import numpy as np
 
 
 # Import configuration file that determines the dataset to be used
 #from concRaw_config import *
-from concNoZero_config import *
+#from concNoZero_config import *
 
 # -------------------------------------------------------
 # Feature transformations to accomodate various linear regression methods
@@ -21,9 +22,10 @@ def x_add_features(xIn, yIn):
     
     # -------------------------------------------------------
     # Additional nonlinear attributes features
-    # First two attributes squared, for example
-    Xf1 = np.power(xIn[:, 1], 2).reshape(-1,1)
-    Xf2 = np.power(xIn[:, 2], 2).reshape(-1,1)
+    Xf1 = np.power(xIn[:, 0], 2).reshape(-1,1)
+    #Xf1 = np.sqrt(xIn[:, 0]).reshape(-1,1)
+    Xf2 = np.power(xIn[:, 4], 2).reshape(-1,1)
+    Xf2 = np.power(xIn[:, 7], 2).reshape(-1,1)
     
     # Add the transformed features into the dataset
     xAddFeat = np.asarray(np.bmat('xIn, Xf1, Xf2'))

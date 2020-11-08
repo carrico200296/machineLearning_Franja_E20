@@ -1,11 +1,11 @@
 """
-Model choice flow script 
+Regression model choice script 
 
 Authors: Vice Roncevic - s190075, Carlos Ribera - S192340, Mu Zhou - s202718
 Created: 07.11.2020
 """
 
-# Import configuration file that determines the dataset to plot
+# Import configuration file that determines the dataset to be used
 from concNoZero_config import *
 #from concRaw_config import *
 
@@ -18,7 +18,6 @@ from matplotlib.pylab import figure, semilogx, loglog, xlabel, ylabel, legend, t
 from CrossValidation import twoLevelCV_compare, twoLevelCV_compare_PCA, twoLevelCV_single, twoLevelCV_single_PCA
 
 from regression import x_add_features, x_tilda_poly, x_tilda_transform, x_tilda_downSample
-from regularization import rlr_validate
 
 # -------------------------------------------------------
 # Define basic parameters
@@ -84,43 +83,7 @@ plt.xlabel('Model', fontsize = 16)
 plt.title('Regression model choice', fontsize = 16)
 plt.show()
     
+print("Model with the smallest E_gen of {0} is the {1} model.".format(round(modelErrorsAvg.min(), 2), modelsToCompare[modelErrorsAvg.argmin()]))
 
-
-
-
-
-"""
-# -----------------------------------------------------------------------------------
-# REGRESSION, PART A. 2nd point-------------------------------------------------------
-
-# Add offset attribute
-xIn = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
-attributeNames = [u'Offset']+attributeNames
-M = M+1
-
-# Values of lambda
-lambdas = np.power(10.,range(-4,9))
-opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xIn, yIn, lambdas, 10)
-
-# Display the results for the last cross-validation fold
-figure(1, figsize=(12,8))
-subplot(1,2,1)
-semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
-xlabel('Regularization factor')
-ylabel('Mean Coefficient Values')
-grid()
-# You can choose to display the legend, but it's omitted for a cleaner 
-# plot, since there are many attributes
-legend(attributeNames[1:], loc='best')
-
-subplot(1,2,2)
-title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
-loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
-xlabel('Regularization factor')
-ylabel('Squared error (crossvalidation)')
-legend(['Train error','Validation error'])
-grid()
-# ------------------------------------------------------------------------------------
-"""
 
 
