@@ -87,11 +87,12 @@ xIn, yIn = x_add_features(X_stand, y_fromStand)
 # REGRESSION, PART A. 2nd point-------------------------------------------------------
 # Add offset attribute
 xIn = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
-attributeNames = [u'Offset']+attributeNames
-M = M+1
+
+# attributeNames = [u'Offset']+attributeNames
+# M = M+1
 
 # Values of lambda
-lambdas = np.power(10.,range(-4,9))
+lambdas = np.power(10.,np.arange(-4,9,0.5))
 opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xIn, yIn, lambdas, 10)
 
 # Display the results for the last cross-validation fold
@@ -112,6 +113,8 @@ xlabel('Regularization factor')
 ylabel('Squared error (crossvalidation)')
 legend(['Train error','Validation error'])
 grid()
+
+print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
 # ---------
 
 
