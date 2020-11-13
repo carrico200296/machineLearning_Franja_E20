@@ -341,7 +341,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
 
 # 11.11.2020 Deprecated
 
-"""
+
 # -------------------------------------------------------
 # Compare a regular model with the model that is using PCA acquired features
 
@@ -471,4 +471,3 @@ def twoLevelCV_compare_PCA(xIn, yIn, models, K1, K2):
         print("Estimated Generalization Error for Model {0}: {1}".format(s+1, estimatedGenError[s]))
 
     return estimatedGenError
-"""

@@ -44,6 +44,9 @@ xIn, yIn = x_add_features(X_stand, y_fromStand)
 K1 = 10
 K2 = 10
 
+# Include sklearn.linear_model.Ridge  ALPHA parameters
+# Put baseline on the training data
+
 # Values of lambda
 lambdas = np.power(10.,np.arange(-4,9,0.5))
 
