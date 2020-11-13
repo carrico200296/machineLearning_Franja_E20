@@ -237,8 +237,10 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, baseline
     error_val = np.empty((K2, len(models)))
     inner_lambdas = np.zeros(K2) # Inner loop values for optimal lambda
     outer_lambdas = np.zeros(K1) # Outer loop values for optimal lambda - lambds of optimal models
+
     inner_hidden_units = np.zeros(K2) # Inner loop values for optimal number of hidden units
     outer_hidden_units = np.zeros(K1) # Outer loop values for optimal number of hidden units -num hidden units of optimal models
+
     
     gen_error_models = np.empty((len(models), 1))
     best_models_idx = np.empty((1, len(models)))
