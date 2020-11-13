@@ -22,6 +22,8 @@ from pca_analysis import pca_compute
 
 from regularization import rlr_validate
 
+from ANN_functions import annr_validate
+
 # Define PCA parameters
 threshold = 0.95 
 pcUsed = 6
@@ -211,7 +213,7 @@ def twoLevelCV_single_PCA(xIn, yIn, model, K1, K2):
 # -------------------------------------------------------
 # Basic 2 model comparison
 
-def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
+def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, baseline):
     
     '''
     Input: (numpy array) xIn matrix, (numpy array) yIn matrix, (list) models, 
@@ -235,6 +237,10 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
     error_val = np.empty((K2, len(models)))
     inner_lambdas = np.zeros(K2) # Inner loop values for optimal lambda
     outer_lambdas = np.zeros(K1) # Outer loop values for optimal lambda - lambds of optimal models
+
+    inner_hidden_units = np.zeros(K2) # Inner loop values for optimal number of hidden units
+    outer_hidden_units = np.zeros(K1) # Outer loop values for optimal number of hidden units -num hidden units of optimal models
+
     
     gen_error_models = np.empty((len(models), 1))
     best_models_idx = np.empty((1, len(models)))
@@ -283,14 +289,22 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
                     opt_lambda = rlr_validate(xInReg, y_train, lambdas, 10)[1]
                     # Save the values of the optimal regularization strength
                     inner_lambdas[k2] = opt_lambda
+ 
+                    # Compute MSEs
+                    error_train[k2, s] = np.square( y_train - m.predict(X_train) ).sum() / y_train.shape[0]
+                    error_val[k2, s] = np.square( y_val - m.predict(X_val) ).sum() / y_val.shape[0]
                     
-                else: # Insert code for ANN here....
-                    
-                    m = model.fit(X_train, y_train)
+                if s==1: # Insert code for ANN here....
+
+                    opt_n_hidden_units = annr_validate(X_train, y_train, hidden_units, 10, n_replicates=1, max_iter=10000)
+                    inner_hidden_units[k2] = opt_n_hidden_units
                 
-                # Compute MSEs
-                error_train[k2, s] = np.square( y_train - m.predict(X_train) ).sum() / y_train.shape[0]
-                error_val[k2, s] = np.square( y_val - m.predict(X_val) ).sum() / y_val.shape[0]
+                    # Compute MSEs
+                    error_train[k2, s] = np.square( y_train - m.predict(X_train) ).sum() / y_train.shape[0]
+                    error_val[k2, s] = np.square( y_val - m.predict(X_val) ).sum() / y_val.shape[0]
+                    
+                else:
+                    
                 
                 print("Validation error - Model {0}: {1}".format(s+1, np.round(error_val[k2, s], 4) ))
                 
@@ -302,29 +316,28 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
             best_models_idx[0, s] = error_val[:, s].argmin()
             print("Inner CV fold of the best model {0} (last loop): {1}".format(s, best_models_idx[0, s]+1))
             
-            # Trace back the model according to its CV fold index
-            m = model.fit(trainSetsX[int(best_models_idx[0, s])], trainSetsY[int(best_models_idx[0, s])])
-            
-            # ---------------------------------
-            #print(model.coef_)
-            # Still TBD
-            # m = model.fit(X_par, y_par)
-            # ---------------------------------
-            
-            # Compute MSE for the optimal model
-            error_test[k1, s] = np.square( y_test - m.predict(X_test) ).sum()/y_test.shape[0]
-            
-            # Compute MSE for the baseline
-            error_baseline[k1] = np.square( y_test - baseline ).sum()/y_test.shape[0]
-            
             # Save the optimal lambda of the optimal model
             if s == 0:
-            
+                
+                # Trace back the model according to its CV fold index
+                m = model.fit(trainSetsX[int(best_models_idx[0, s])], trainSetsY[int(best_models_idx[0, s])])
+                
+                # ---------------------------------
+                #print(model.coef_)
+                # Still TBD
+                # m = model.fit(X_par, y_par)
+                # ---------------------------------
+                
+                # Compute MSE for the optimal model
+                error_test[k1, s] = np.square( y_test - m.predict(X_test) ).sum()/y_test.shape[0]    
                 outer_lambdas[k1] = inner_lambdas[int(best_models_idx[0, s])]
                 
             else: # Insert code for optimal h (for ANN here)...
                 pass
             
+            
+            # Compute MSE for the baseline
+            error_baseline[k1] = np.square( y_test - baseline ).sum()/y_test.shape[0]
             
         # Append the list of the differences in the generalization errors of the two models 
         r.append( np.mean(error_test[:, 0]) - np.mean(error_test[:, 1]) )
