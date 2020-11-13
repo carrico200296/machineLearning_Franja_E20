@@ -25,10 +25,10 @@ def x_add_features(xIn, yIn):
     Xf1 = np.power(xIn[:, 0], 2).reshape(-1,1)
     #Xf1 = np.sqrt(xIn[:, 0]).reshape(-1,1)
     Xf2 = np.power(xIn[:, 4], 2).reshape(-1,1)
-    Xf2 = np.power(xIn[:, 7], 2).reshape(-1,1)
+    Xf3 = np.power(xIn[:, 7], 2).reshape(-1,1)
     
     # Add the transformed features into the dataset
-    xAddFeat = np.asarray(np.bmat('xIn, Xf1, Xf2'))
+    xAddFeat = np.asarray(np.bmat('xIn, Xf1, Xf2, Xf3'))
     yOut = yIn # For traceability
     
     return xAddFeat, yOut 

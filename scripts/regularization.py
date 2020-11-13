@@ -76,7 +76,7 @@ def rlr_validate(xIn, yIn, lambdas, cvf):
     
     return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
 
-
+"""
 # Import configuration file that determines the dataset to be used
 from concNoZero_config import *
 #from concRaw_config import *
@@ -116,5 +116,5 @@ grid()
 
 print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
 # ---------
-
+"""
 

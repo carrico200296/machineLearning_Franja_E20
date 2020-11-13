@@ -234,7 +234,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
     error_train = np.empty((K2, len(models)))
     error_val = np.empty((K2, len(models)))
     inner_lambdas = np.zeros(K2) # Inner loop values for optimal lambda
-    outer_lambdas = np.zeros(K2) # Outer loop values for optimal lambda - lambds of optimal models
+    outer_lambdas = np.zeros(K1) # Outer loop values for optimal lambda - lambds of optimal models
     
     gen_error_models = np.empty((len(models), 1))
     best_models_idx = np.empty((1, len(models)))
@@ -327,7 +327,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
             
             
         # Append the list of the differences in the generalization errors of the two models 
-        r.append( error_test[:, 0] - error_test[:, 1] )
+        r.append( np.mean(error_test[:, 0]) - np.mean(error_test[:, 1]) )
         
         k1 += 1
         
@@ -341,7 +341,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, baseline):
 
 # 11.11.2020 Deprecated
 
-"""
+
 # -------------------------------------------------------
 # Compare a regular model with the model that is using PCA acquired features
 
@@ -471,4 +471,3 @@ def twoLevelCV_compare_PCA(xIn, yIn, models, K1, K2):
         print("Estimated Generalization Error for Model {0}: {1}".format(s+1, estimatedGenError[s]))
 
     return estimatedGenError
-"""
