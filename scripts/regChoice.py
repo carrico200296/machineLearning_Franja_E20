@@ -1,7 +1,7 @@
 """
 Regression model choice script 
 
-Authors: Vice Roncevic - s190075, Carlos Ribera - S192340, Mu Zhou - s202718
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
 Created: 07.11.2020
 """
 
