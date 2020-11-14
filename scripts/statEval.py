@@ -30,6 +30,7 @@ def correlated_ttest(r, rho, alpha=0.05):
     return p, CI
 
 
+
 # Setup 1
 
 # See box 11.3.4 and modify Jeffry interval to accomodate two regression models

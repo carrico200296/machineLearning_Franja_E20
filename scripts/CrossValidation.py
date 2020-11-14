@@ -23,6 +23,8 @@ from pca_analysis import pca_compute
 from regularization import rlr_validate
 from ANN_functions import *
 
+from ANN_functions import annr_validate
+
 # Define PCA parameters
 threshold = 0.95 
 pcUsed = 6
@@ -226,6 +228,7 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units):
     # Initialize variables
     error_train = np.empty((K2, len(models)))
     error_val = np.empty((K2, len(models)))
+    
     error_test = np.empty((K1, len(models)))
     
     inner_lambdas = np.zeros(K2) # Inner loop values for optimal lambda
@@ -280,6 +283,7 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units):
                     opt_lambda = rlr_validate(xInReg, y_train, lambdas, 10)[1]
                     # Save the values of the optimal regularization strength
                     inner_lambdas[k2] = opt_lambda
+
                     print("Optimal Lambda = {}".format(np.round(opt_lambda,3)))
                     modelRLR = lm.Ridge(alpha=opt_lambda)
                     m = modelRLR.fit(X_train, y_train)
@@ -571,14 +575,11 @@ def twoLevelCV_classification(xIn, yIn, models, K1, K2, lambdas, hidden_units):
         k1 += 1
         print("\n")
     estimatedGenError = np.round(np.mean(error_test, axis = 0), 4)
-    
-    
-    # Make different r vectors for different combinations of models...
-    
+        
     # Append the list of the differences in the GENERATLIZATION errors of the two models 
-    r.append( np.mean(error_test[:, 0] - error_test[:, 1]) )
+    #.append( np.mean(error_test[:, 0] - error_test[:, 1]) )
     # Can also be
-    r.append ( estimatedGenError  )
+    #r.append ( estimatedGenError  )
     
     print("\n")
     for s in range(len(models)):
