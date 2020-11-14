@@ -18,7 +18,7 @@ xIn,yIn = x_add_features(X_stand, y_fromStand)
 #%%
 #-------- REGRESSION ANN -------------------------
 # Range of hidden units
-hidden_units = np.arange(5,12,5)
+hidden_units = np.arange(5,11,5)
 opt_n_hidden_units, train_err_vs_hidden_units, test_err_vs_hidden_units = annr_validate(xIn, yIn, hidden_units, 10, n_replicates=1, max_iter=10000)
 
 print(opt_n_hidden_units)

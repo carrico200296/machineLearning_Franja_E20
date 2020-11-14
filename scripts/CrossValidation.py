@@ -296,7 +296,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, baseline
                     
                 if s==1: # Insert code for ANN here....
 
-                    opt_n_hidden_units = annr_validate(X_train, y_train, hidden_units, 10, n_replicates=1, max_iter=10000)
+                    opt_n_hidden_units = annr_validate(X_train, y_train, hidden_units, 10, n_replicates=1, max_iter=10000)[0]
                     inner_hidden_units[k2] = opt_n_hidden_units
                 
                     # Compute MSEs
@@ -304,6 +304,8 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, baseline
                     error_val[k2, s] = np.square( y_val - m.predict(X_val) ).sum() / y_val.shape[0]
                     
                 else:
+                    pass
+                    # baseline
                     
                 
                 print("Validation error - Model {0}: {1}".format(s+1, np.round(error_val[k2, s], 4) ))
@@ -338,13 +340,18 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, baseline
             
             # Compute MSE for the baseline
             error_baseline[k1] = np.square( y_test - baseline ).sum()/y_test.shape[0]
-            
-        # Append the list of the differences in the generalization errors of the two models 
-        r.append( np.mean(error_test[:, 0]) - np.mean(error_test[:, 1]) )
-        
+                      
         k1 += 1
         
     estimatedGenError = np.round(np.mean(error_test, axis = 0), 4)
+    
+    
+    # Make different r vectors for different combinations of models...
+    
+    # Append the list of the differences in the GENERATLIZATION errors of the two models 
+    r.append( np.mean(error_test[:, 0] - error_test[:, 1]) )
+    # Can also be
+    r.append ( estimatedGenError  )
     
     print("\n")
     for s in range(len(models)):
