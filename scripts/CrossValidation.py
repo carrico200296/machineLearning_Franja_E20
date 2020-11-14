@@ -23,8 +23,6 @@ from pca_analysis import pca_compute
 from regularization import rlr_validate
 from ANN_functions import *
 
-from ANN_functions import annr_validate
-
 # Define PCA parameters
 threshold = 0.95 
 pcUsed = 6

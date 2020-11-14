@@ -82,11 +82,11 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
     for (k, (train_index, test_index)) in enumerate(CV.split(xIn,yIn)):
         print('\n\tCrossvalidation fold: {0}/{1}'.format(k+1,K))    
 
-        X_train = torch.Tensor(xIn[train_index,:])
-        y_train = torch.Tensor(yIn[train_index,:])
-        X_test = torch.Tensor(xIn[test_index,:])
-        y_test = torch.Tensor(yIn[test_index,:])
-        print(y_train)
+        X_train = torch.from_numpy(xIn[train_index,:]).float()
+        y_train = torch.from_numpy(yIn[train_index]).long().squeeze()
+        X_test = torch.from_numpy(xIn[test_index,:]).float()
+        y_test = torch.from_numpy(yIn[test_index]).long().squeeze()
+                
         for i in range(0,len(hidden_units)):
             # Define the model
             model = lambda: torch.nn.Sequential(torch.nn.Linear(M, hidden_units[i]), 
@@ -95,7 +95,7 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
                                                 torch.nn.Softmax(dim=1)
                                                 )
             print('\t>> Training model with {} hidden units\n'.format(hidden_units[i]))           
-            net, _, _ = train_neural_net(model,
+            net, final_loss, _ = train_neural_net(model,
                                         loss_fn,
                                         X=X_train,
                                         y=y_train,
@@ -107,12 +107,15 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
             # Determine probability of each class using trained network
             softmax_logits_train = net(X_train)
             softmax_logits_test = net(X_test)
+            print(softmax_logits_test)
             # Get the estimated class as the class with highest probability (argmax on softmax_logits)
             y_train_est = (torch.max(softmax_logits_train, dim=1)[1]).data.numpy()
             y_test_est = (torch.max(softmax_logits_test, dim=1)[1]).data.numpy()
-
+            print(y_test_est)
+            print(y_test)
             # Determine errors
-            e = (y_test_est != y_test)
+            e = (y_test_est != y_test.data.numpy())
+            print(e)
             print('Number of miss-classifications for ANN with {} hidden units = \n\t {} out of {}'.format(hidden_units[i],sum(e),len(e)))
                 
             '''
@@ -133,28 +136,6 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
     '''
     opt_n_hidden_units = f
     return opt_n_hidden_units
-
-
-def regularized_multinominal_regression():
-    '''
-    # Fit multinomial logistic regression model
-    regularization_strength = 1e-3
-    #Try a high strength, e.g. 1e5, especially for synth2, synth3 and synth4
-    mdl = lm.LogisticRegression(solver='lbfgs', multi_class='multinomial', 
-                                   tol=1e-4, random_state=1, 
-                                   penalty='l2', C=1/regularization_strength)
-    mdl.fit(X_train,y_train)
-    y_test_est = mdl.predict(X_test)
-    
-    test_error_rate = np.sum(y_test_est!=y_test) / len(y_test)
-    
-    predict = lambda x: np.argmax(mdl.predict_proba(x),1)
-    plt.figure(2,figsize=(9,9))
-    visualize_decision_boundary(predict, [X_train, X_test], [y_train, y_test], attributeNames, classNames)
-    plt.title('LogReg decision boundaries')
-    plt.show()
-    '''
-    return 
 
 
 def train_neural_net(model, loss_fn, X, y, n_replicates=3, max_iter = 10000, tolerance=1e-6):
