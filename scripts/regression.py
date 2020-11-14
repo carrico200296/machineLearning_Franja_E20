@@ -48,8 +48,6 @@ def x_tilda_poly(xIn, yIn):
     return xTildaPoly, yOut
 
 # --------------------------------
-# Vice, 01.11.2020
-# Do we want this in radians?
 
 def x_tilda_transform(xIn, yIn):
     
