@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from sklearn import model_selection
 from scipy import stats
 
+
 def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter):
     
     loss_fn = torch.nn.MSELoss() # MSE for regression problem 
@@ -22,7 +23,7 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter):
     #yIn = yIn.squeeze()
     
     for (k, (train_index, test_index)) in enumerate(CV.split(xIn,yIn)):
-        print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
+        print('\n\tCrossvalidation fold: {0}/{1}'.format(k+1,K))    
         
         X_train = torch.Tensor(xIn[train_index,:])
         y_train = torch.Tensor(yIn[train_index])
@@ -37,7 +38,8 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter):
                                 #torch.nn.Tanh(),
                                 torch.nn.Linear(hidden_units[i], 1),
                                 )
-            print('Training model with {} hidden units\n'.format(hidden_units[i]))
+            
+            print('\t>> Training model with {} hidden units\n'.format(hidden_units[i]))
             
             net, final_loss, learning_curve = train_neural_net(model,
                                                                loss_fn,
@@ -68,7 +70,7 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter):
 
     return opt_n_hidden_units, train_err_vs_hidden_units, test_err_vs_hidden_units
 
-def ann_multiclass_classification(xIn, yIn, C, hidden_units, K, n_replicates, max_iter):    
+def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter):    
     
     loss_fn = torch.nn.CrossEntropyLoss()
     CV = model_selection.KFold(K, shuffle=True)
@@ -79,7 +81,7 @@ def ann_multiclass_classification(xIn, yIn, C, hidden_units, K, n_replicates, ma
     #yIn = yIn.squeeze()
 
     for (k, (train_index, test_index)) in enumerate(CV.split(xIn,yIn)):
-        print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
+        print('\n\tCrossvalidation fold: {0}/{1}'.format(k+1,K))    
         
         X_train = torch.Tensor(xIn[train_index,:])
         y_train = torch.Tensor(yIn[train_index,:])
@@ -93,7 +95,7 @@ def ann_multiclass_classification(xIn, yIn, C, hidden_units, K, n_replicates, ma
                                                 torch.nn.Linear(hidden_units[i], C), 
                                                 torch.nn.Softmax(dim=1)
                                                 )
-            print('Training model with {} hidden units\n'.format(hidden_units[i]))
+            print('\t>> Training model with {} hidden units\n'.format(hidden_units[i]))
             
             net, _, _ = train_neural_net(model,
                                         loss_fn,
@@ -186,7 +188,7 @@ def train_neural_net(model, loss_fn, X, y, n_replicates=3, max_iter = 10000, tol
     logging_frequency = 1000 # display the loss every 1000th iteration
     best_final_loss = 1e100
     for r in range(n_replicates):
-        print('\n\tReplicate: {}/{}'.format(r+1, n_replicates))
+        print('\tReplicate: {}/{}'.format(r+1, n_replicates))
     
         net = model()
         torch.nn.init.xavier_uniform_(net[0].weight)
