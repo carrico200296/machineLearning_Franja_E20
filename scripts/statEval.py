@@ -19,6 +19,7 @@ import sklearn.tree
 
 from toolbox_02450 import *
 
+
 # Setup 1
 
 # See box 11.3.4 and modify Jeffry interval to accomodate two regression models
@@ -49,10 +50,15 @@ K2 = 10
 
 # Values of lambda
 lambdas = np.power(10.,np.arange(-4,9,0.5))
+# Range of hidden units
+hidden_units = np.arange(1,12,5)
+
+
 
 # Next block of code is to be used for comparing linear regression and ANN
+
 models = [lm.LinearRegression(), sklearn.tree.DecisionTreeRegressor()]
-error_test, outer_lambdas, error_baseline, r, estimatedGenError = twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, y_baseline)
+error_test, outer_lambdas, error_baseline, r, estimatedGenError = twoLevelCV_compare(xIn, yIn, models, K1, K2, lambdas, hidden_units, y_baseline)
 
 
 # Initialize parameters and run test appropriate for setup II
