@@ -279,7 +279,7 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
                     # Save the values of the optimal regularization strength
                     inner_lambdas[k2] = opt_lambda
 
-                    print("Optimal Lambda = {}".format(np.round(opt_lambda,3)))
+                    print("Optimal Lambda = {}".format(np.round(opt_lambda, 4)))
                     modelRLR = lm.Ridge(alpha=opt_lambda)
                     m = modelRLR.fit(X_train, y_train)
 
@@ -293,15 +293,18 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
                 if s==1: # ANN REGRESSION
                     
                     print("\nInner {}/{} - ANN Regression".format(k2+1,K2))
-                    
+
                     opt_n_hidden_units = annr_validate(X_train, y_train, hidden_units, CV_ann, n_replicates=n_replicates, max_iter=max_iter, tolerance=tolerance)[0]
                     inner_hidden_units[k2] = opt_n_hidden_units
-
+                    
+                    # Training the ann model with the optimal number of hidden units
+                    
                     model = lambda: torch.nn.Sequential(torch.nn.Linear(M, opt_n_hidden_units),
                                                         torch.nn.LeakyReLU(0.01),
                                                         torch.nn.Linear(opt_n_hidden_units, 1),
                                                         )
                     
+
                     # Training the ann model with the optimal number of hidden units
                     print("\n\tTraining the model with the optimal number of hidden units")
                     loss_fn = torch.nn.MSELoss()
@@ -340,7 +343,6 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
             # Find the CV index of optimal models
             best_models_idx[0, s] = error_val[:, s].argmin()
             print("\n- The best model {0} was: CV number {1}".format(s+1, int(best_models_idx[0, s]+1)))
-            
             
             if s == 0: # Save the optimal lambda of the optimal model
                 
