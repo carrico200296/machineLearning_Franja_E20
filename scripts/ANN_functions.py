@@ -30,6 +30,7 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter):
         y_test = torch.Tensor(yIn[test_index])
         
         for i in range(0,len(hidden_units)):
+            
             # Define the model
             model = lambda: torch.nn.Sequential(
                                 torch.nn.Linear(M, hidden_units[i]),
@@ -180,7 +181,9 @@ def train_neural_net(model, loss_fn, X, y, n_replicates=3, max_iter = 10000, tol
         print('\t\t{}\t{}\t\t{}'.format('Iter', 'Loss','Rel. loss'))
         learning_curve = [] # setup storage for loss at each step
         old_loss = 1e6
+        
         for i in range(max_iter):
+            
             y_est = net(X) # forward pass, predict labels on training set
             loss = loss_fn(y_est, y) # determine loss
             loss_value = loss.data.numpy() #get numpy array instead of tensor
@@ -189,13 +192,17 @@ def train_neural_net(model, loss_fn, X, y, n_replicates=3, max_iter = 10000, tol
             # Convergence check, see if the percentual loss decrease is within
             # tolerance:
             p_delta_loss = np.abs(loss_value-old_loss)/old_loss
+            
             if p_delta_loss < tolerance: break
+        
             old_loss = loss_value
             
             # display loss with some frequency:
             if (i != 0) & ((i+1) % logging_frequency == 0):
+                
                 print_str = '\t\t' + str(i+1) + '\t' + str(loss_value) + '\t' + str(p_delta_loss)
                 print(print_str)
+                
             # do backpropagation of loss and optimize weights 
             optimizer.zero_grad(); loss.backward(); optimizer.step()
             
