@@ -15,6 +15,7 @@ from regression import x_add_features
 
 xIn,yIn = x_add_features(X_stand, y_fromStand)
 
+
 #%%
 #-------- REGRESSION ANN -------------------------
 # Range of hidden units
@@ -35,40 +36,31 @@ plt.grid()
 #-------MULTI-CLASS ANN CLASSIFICATION ---------------------------
 
 # Range of hidden units
-hidden_units = np.arange(5,12,5)
-opt_n_hidden_units = ann_multiclass_classification(xIn, y_class_encoding, C, hidden_units, 10, n_replicates=1, max_iter=10000)
+hidden_units = np.arange(5,11,5)
+opt_n_hidden_units = ann_multiclass_validate(xIn, y_class, C, hidden_units, 10, n_replicates=1, max_iter=10000)
+print(f)
+# torch.CrossEntropy: combines nn.LogSoftmax() and nn.NLLLoss() in one single class.
 
-#%%
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import linear_model
+"""
+def regularized_multinominal_regression():
+    '''
+    # Fit multinomial logistic regression model
+    regularization_strength = 1e-3
+    #Try a high strength, e.g. 1e5, especially for synth2, synth3 and synth4
+    mdl = lm.LogisticRegression(solver='lbfgs', multi_class='multinomial', 
+                                   tol=1e-4, random_state=1, 
+                                   penalty='l2', C=1/regularization_strength)
+    mdl.fit(X_train,y_train)
+    y_test_est = mdl.predict(X_test)
+    
+    test_error_rate = np.sum(y_test_est!=y_test) / len(y_test)
+    
+    predict = lambda x: np.argmax(mdl.predict_proba(x),1)
+    plt.figure(2,figsize=(9,9))
+    visualize_decision_boundary(predict, [X_train, X_test], [y_train, y_test], attributeNames, classNames)
+    plt.title('LogReg decision boundaries')
+    plt.show()
+    '''
+    return 
 
-# X is the 10x10 Hilbert matrix
-X = 1. / (np.arange(1, 11) + np.arange(0, 10)[:, np.newaxis])
-y = np.ones(10)
-
-# #############################################################################
-# Compute paths
-
-n_alphas = 200
-alphas = np.logspace(-10, -2, n_alphas)
-
-coefs = []
-for a in alphas:
-    ridge = linear_model.Ridge(alpha=a, fit_intercept=False)
-    ridge.fit(X, y)
-    coefs.append(ridge.coef_)
-
-# #############################################################################
-# Display results
-
-ax = plt.gca()
-
-ax.plot(alphas, coefs)
-ax.set_xscale('log')
-ax.set_xlim(ax.get_xlim()[::-1])  # reverse axis
-plt.xlabel('alpha')
-plt.ylabel('weights')
-plt.title('Ridge coefficients as a function of the regularization')
-plt.axis('tight')
-plt.show()
+"""
