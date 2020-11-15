@@ -17,6 +17,7 @@ from regularization import rlr_validate, regmultinominal_regression
 
 
 xIn,yIn = x_add_features(X_stand, y_fromStand)
+#xIn,yIn = X_stand, y_fromStand
 M = xIn.shape[1]
 attributeNames.append('Xf1')
 attributeNames.append('Xf2')
@@ -26,8 +27,8 @@ classNames = classNames.tolist()
 #%%
 # Unbalanced Dataset
 print("Observations of Low Concrete = {}".format(np.sum(y_class.squeeze()==0)))
-print("Observations of Low Concrete = {}".format(np.sum(y_class.squeeze()==1)))
-print("Observations of Low Concrete = {}".format(np.sum(y_class.squeeze()==2)))
+print("Observations of Medium Concrete = {}".format(np.sum(y_class.squeeze()==1)))
+print("Observations of High Concrete = {}".format(np.sum(y_class.squeeze()==2)))
 
 # BASELINE CLASSIFICATION MODEL
 baseline_class = np.array((np.sum(y_class.squeeze()==0), np.sum(y_class.squeeze()==1), np.sum(y_class.squeeze()==2)))
@@ -41,7 +42,7 @@ print(error_test)
 xInReg = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
 
 # Parameters
-lambdas = np.power(10.,np.arange(-4,9,0.5))
+lambdas = np.power(10.,np.arange(-10,10,0.5))
 cvf = 10
 opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xInReg, yIn, lambdas, cvf=cvf)
 
@@ -68,8 +69,7 @@ print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
 #%%
 #------- REGULARIZED MUTINOMINAL LOGISTIC REGRESSION ---------------------------
 # Parameters
-lambdas = np.arange(1,30,0.2)
-lambdas = np.power(10.,np.arange(-4,9,0.5))
+lambdas = np.logspace(-5, 5, 20)
 cvf = 10
 opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = regmultinominal_regression(xIn, y_class, lambdas, cvf=cvf)
 
@@ -83,23 +83,23 @@ plt.grid()
 plt.legend(attributeNames[1:], loc='best')
 
 plt.subplot(1,2,2)
-plt.title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
+plt.title('Optimal lambda: 1e{0}'.format(np.round(np.log10(opt_lambda), 4)))
 plt.loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
 plt.xlabel('Regularization factor')
 plt.ylabel('Squared error (crossvalidation)')
 plt.legend(['Train error','Validation error'])
 plt.grid()
 
-print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
+print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 8)))
 
 
 #%%
 #-------- ANN REGRESSION -------------------------
 # Parameters
-hidden_units = np.array((1,5,10,15,18))
+hidden_units = np.array((1,3,6,8,11,15))
 CV_ann = 2
-n_replicates=1
-max_iter=15000
+n_replicates = 1
+max_iter = 15000
 tolerance = 1e-7
 
 opt_n_hidden_units, train_err_vs_hidden_units, test_err_vs_hidden_units = annr_validate(xIn, yIn, hidden_units, CV_ann, n_replicates=n_replicates, max_iter=max_iter, tolerance = tolerance)
@@ -116,7 +116,7 @@ print('Optimal number of hidden units: {}'.format(opt_n_hidden_units))
 #%%
 #-------MULTI-CLASS ANN CLASSIFICATION ---------------------------
 # Parameters
-hidden_units = np.array((1,10,15,18,20))
+hidden_units = np.array((1,3,6,8,11,15))
 CV_ann = 2
 n_replicates=1
 max_iter=15000

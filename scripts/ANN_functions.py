@@ -33,8 +33,11 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter, tolerance):
             # Define the model
             model = lambda: torch.nn.Sequential(
                                 torch.nn.Linear(M, hidden_units[i]),
-                                torch.nn.LeakyReLU(0.01),
-                                #torch.nn.Tanh(),
+                                torch.nn.Tanh(),
+                                #torch.nn.Dropout(p=0.5),
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(hidden_units[i], hidden_units[i]),
+                                #torch.nn.Tanh(), 
                                 torch.nn.Linear(hidden_units[i], 1),
                                 )
 
@@ -91,7 +94,7 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
         for i in range(0,len(hidden_units)):
             # Define the model
             model = lambda: torch.nn.Sequential(torch.nn.Linear(M, hidden_units[i]), 
-                                                torch.nn.ReLU(),
+                                                torch.nn.Tanh(),
                                                 torch.nn.Linear(hidden_units[i], C), 
                                                 torch.nn.Softmax(dim=1)
                                                 )
@@ -166,7 +169,7 @@ def train_neural_net(model, loss_fn, X, y, n_replicates=3, max_iter = 10000, tol
         torch.nn.init.xavier_uniform_(net[0].weight)
         torch.nn.init.xavier_uniform_(net[2].weight)
                      
-        optimizer = torch.optim.Adam(net.parameters())
+        optimizer = torch.optim.Adam(net.parameters(), lr = 0.5)
         
         # Train the network while displaying and storing the loss
         print('\t\t{}\t{}\t\t{}'.format('Iter', 'Loss','Rel. loss'))

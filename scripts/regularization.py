@@ -104,6 +104,7 @@ def regmultinominal_regression(xIn, yIn, lambdas, cvf):
             # Evaluate training and test performance
             train_error[f,l] = np.sum(mdl.predict(X_train)!=y_train) / len(y_train)
             test_error[f,l] = np.sum(mdl.predict(X_test)!=y_test) / len(y_test)
+            w[:,f,l] = mdl.coef_[0] # Nice...
         f=f+1
 
     opt_val_err = np.min(np.mean(test_error,axis=0))

@@ -10,9 +10,7 @@ import numpy as np
 import math
 import sklearn.linear_model as lm
 from matplotlib.pylab import figure, semilogx, loglog, xlabel, ylabel, legend, title, subplot, show, grid
-
 from CrossValidation import twoLevelCV_single, twoLevelCV_single_PCA
-
 from featureTransform import x_add_features, x_tilda_poly, x_tilda_transform, x_tilda_downSample
 
 def compare_models(X_stand, y_fromStand, modelsToCompare):
