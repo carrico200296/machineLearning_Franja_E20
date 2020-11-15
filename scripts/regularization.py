@@ -6,9 +6,8 @@ Created: 01.11.2020
 import numpy as np
 from sklearn import model_selection
 import matplotlib.pyplot as plt
-from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, 
-                           title, subplot, show, grid)
-from regression import x_add_features
+from featureTransform import x_add_features
+import sklearn.linear_model as lm
 
 
 def rlr_validate(xIn, yIn, lambdas, cvf):
@@ -76,45 +75,42 @@ def rlr_validate(xIn, yIn, lambdas, cvf):
     
     return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
 
-"""
-# Import configuration file that determines the dataset to be used
-from concNoZero_config import *
-#from concRaw_config import *
 
-xIn, yIn = x_add_features(X_stand, y_fromStand)
+def regmultinominal_regression(xIn, yIn, lambdas, cvf):
+    
+    CV = model_selection.KFold(cvf, shuffle=True)
+    M = xIn.shape[1]
+    w = np.empty((M,cvf,len(lambdas)))
+    train_error = np.empty((cvf,len(lambdas)))
+    test_error = np.empty((cvf,len(lambdas)))
+    f = 0
+    yIn = yIn.squeeze()
+    
+    for train_index, test_index in CV.split(xIn,yIn):
+        
+        X_train = xIn[train_index]
+        y_train = yIn[train_index]
+        X_test = xIn[test_index]
+        y_test = yIn[test_index]
+        
+        for l in range(0,len(lambdas)):
 
-# -----------------------------------------------------------------------------------
-# REGRESSION, PART A. 2nd point-------------------------------------------------------
-# Add offset attribute
-xIn = np.concatenate((np.ones((xIn.shape[0],1)), xIn),1)
+            # Fit multinomial logistic regression model
+            mdl = lm.LogisticRegression(solver='lbfgs', multi_class='multinomial', 
+                                               tol=1e-4, random_state=1, 
+                                               penalty='l2', C=1/lambdas[l], max_iter=1000)
+            mdl.fit(X_train,y_train)
+            
+            # Evaluate training and test performance
+            train_error[f,l] = np.sum(mdl.predict(X_train)!=y_train) / len(y_train)
+            test_error[f,l] = np.sum(mdl.predict(X_test)!=y_test) / len(y_test)
+        f=f+1
 
-# attributeNames = [u'Offset']+attributeNames
-# M = M+1
-
-# Values of lambda
-lambdas = np.power(10.,np.arange(-4,9,0.5))
-opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(xIn, yIn, lambdas, 10)
-
-# Display the results for the last cross-validation fold
-figure(1, figsize=(12,8))
-subplot(1,2,1)
-semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
-xlabel('Regularization factor')
-ylabel('Mean Coefficient Values')
-grid()
-# You can choose to display the legend, but it's omitted for a cleaner 
-# plot, since there are many attributes
-legend(attributeNames[1:], loc='best')
-
-subplot(1,2,2)
-title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
-loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
-xlabel('Regularization factor')
-ylabel('Squared error (crossvalidation)')
-legend(['Train error','Validation error'])
-grid()
-
-print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
-# ---------
-"""
+    opt_val_err = np.min(np.mean(test_error,axis=0))
+    opt_lambda = lambdas[np.argmin(np.mean(test_error,axis=0))]
+    train_err_vs_lambda = np.mean(train_error,axis=0)
+    test_err_vs_lambda = np.mean(test_error,axis=0)
+    mean_w_vs_lambda = np.squeeze(np.mean(w,axis=1))
+    
+    return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
 
