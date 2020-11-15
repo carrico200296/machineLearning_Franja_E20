@@ -43,8 +43,8 @@ def correlated_ttest(r, rho, alpha=0.05):
 xIn, yIn = x_add_features(X_stand, y_fromStand)
 
 # Initialize 2 layer CV parameters
-K1 = 10
-K2 = 10
+K1 = 2
+K2 = 2
 
 # Values of lambda
 lambdas = np.power(10.,np.arange(-4,9,0.5))
