@@ -13,7 +13,7 @@ from matplotlib.pylab import figure, semilogx, loglog, xlabel, ylabel, legend, t
 
 from CrossValidation import twoLevelCV_single, twoLevelCV_single_PCA
 
-from regression import x_add_features, x_tilda_poly, x_tilda_transform, x_tilda_downSample
+from featureTransform import x_add_features, x_tilda_poly, x_tilda_transform, x_tilda_downSample
 
 def compare_models(X_stand, y_fromStand, modelsToCompare):
     
