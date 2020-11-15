@@ -36,22 +36,22 @@ def correlated_ttest(r, rho, alpha=0.05):
 # Setup 2
 
 # Check is the correlated t-test enough,  dataset is random
-
+"""
 #%% REGRESSION
 
 #_______CREATE DATASET WITH ADDED FEATURES_______
 xIn, yIn = x_add_features(X_stand, y_fromStand)
 
 # Initialize 2 layer CV parameters
-K1 = 2
-K2 = 2
+K1 = 5
+K2 = 5
 
 # Values of lambda
-lambdas = np.power(10.,np.arange(-4,9,0.5))
+lambdas = np.power(10.,np.arange(-10,10,0.5))
 # Range of hidden units
-hidden_units = np.array((1,5,10,15))
+hidden_units = np.array((1,3,6,8,11,15))
 # Parameters for ANN training part
-CV_ann = 10
+CV_ann = 2
 n_replicates=1
 max_iter=15000
 tolerance = 1e-7
@@ -82,6 +82,8 @@ print('RLR vs. Baseline')
 p_setupII, CI_setupII = correlated_ttest(r[:,2], rho, alpha=alpha)
 print("\nP value for setup II: {0}".format(round(p_setupII, 4)))
 print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_setupII[1], 4) ))
+"""
+
 
 #%% CLASSIFICATION
 
@@ -89,23 +91,22 @@ print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_s
 xIn, yIn = x_add_features(X_stand, y_class)
 
 # Initialize 2 layer CV parameters
-K1 = 3
-K2 = 3
+K1 = 5
+K2 = 5
 
 # Values of lambda
-lambdas = np.arange(1,30,0.2)
-lambdas = np.power(10.,np.arange(-4,9,0.5))
+lambdas = np.logspace(-5, 5, 20)
 # Range of hidden units
-hidden_units = np.array((5,10,20))
+hidden_units = np.array((1,3,6,8,11,15))
 # Parameters for ANN training part
-CV_ann = 3
+CV_ann = 2
 n_replicates=1
-max_iter=10000
+max_iter=15000
 tolerance = 1e-7
 
 # Comparing with two layer Cross-Validation: linear regression ,ANN and baseline
 models = ['REGULARIZED_MULTINOMINAL_REGRESSION', 'ANN_MULTICLASS', 'BASELINE_CLASSIFICATION']
-error_test, outer_lambdas, outer_hidden_units, r, estimatedGenError = twoLevelCV_classification(xIn, y_class, models, K1, K2, lambdas,
+error_test, outer_lambdas, outer_hidden_units, r, estimatedGenError = twoLevelCV_classification(xIn, yIn, models, K1, K2, lambdas,
                                                                                                 hidden_units, CV_ann=CV_ann,
                                                                                                 n_replicates=n_replicates,
                                                                                                 max_iter=max_iter, tolerance = tolerance)

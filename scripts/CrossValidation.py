@@ -300,7 +300,7 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
                     # Training the ann model with the optimal number of hidden units
                     
                     model = lambda: torch.nn.Sequential(torch.nn.Linear(M, opt_n_hidden_units),
-                                                        torch.nn.LeakyReLU(0.01),
+                                                        torch.nn.Tanh(),
                                                         torch.nn.Linear(opt_n_hidden_units, 1),
                                                         )
                     
@@ -480,7 +480,7 @@ def twoLevelCV_classification(xIn, yIn, models, K1, K2, lambdas, hidden_units, C
                     inner_hidden_units[k2] = opt_n_hidden_units
 
                     model = lambda: torch.nn.Sequential(torch.nn.Linear(M,opt_n_hidden_units), 
-                                                        torch.nn.ReLU(),
+                                                        torch.nn.Tanh(),
                                                         torch.nn.Linear(opt_n_hidden_units, 3), 
                                                         torch.nn.Softmax(dim=1)
                                                         )
