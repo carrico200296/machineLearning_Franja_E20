@@ -1,8 +1,9 @@
 """
-Regression model choice script 
+Description: This script computes and compares different feature transformations for Linear Regression problem. 
+             The model with the lowest estimated generalization error - RMSE will be used as a dataset for the rest of the project.
 
 Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
-Created: 07.11.2020
+Created: 01.11.2020
 """
 
 import matplotlib.pyplot as plt
@@ -79,7 +80,6 @@ for i in range(2):
         # Import configuration file that determines the dataset to be used
         from concRaw_config import *
         # Define basic parameters
-        # Maybe change this convention?
         X_stand = X_stand
         y_fromStand = y_fromStand
         
@@ -89,7 +89,6 @@ for i in range(2):
         # Import configuration file that determines the dataset to be used
         from concNoZero_config import *
         # Define basic parameters
-        # Maybe change this convention?
         X_stand = X_stand
         y_fromStand = y_fromStand
         

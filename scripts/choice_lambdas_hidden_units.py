@@ -1,7 +1,9 @@
 """
-Created on Fri Nov 13 01:13:58 2020
+Description: This script has been used for choosing a range of values for the lambdas and the number of hidden units.
+             Moreover, it also computes the number of classes (low, medium and high concret) that the dataset has after the whole preprocessing process.
 
-@author:
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
+Created: 13.11.2020
 """
 
 import matplotlib.pyplot as plt
@@ -17,7 +19,6 @@ from regularization import rlr_validate, regmultinominal_regression
 
 
 xIn,yIn = x_add_features(X_stand, y_fromStand)
-#xIn,yIn = X_stand, y_fromStand
 M = xIn.shape[1]
 attributeNames.append('Xf1')
 attributeNames.append('Xf2')
@@ -67,7 +68,7 @@ print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
 
 
 #%%
-#------- REGULARIZED MUTINOMINAL LOGISTIC REGRESSION ---------------------------
+#------- REGULARIZED MUTINOMINAL REGRESSION ---------------------------
 # Parameters
 lambdas = np.logspace(-5, 5, 20)
 cvf = 10
