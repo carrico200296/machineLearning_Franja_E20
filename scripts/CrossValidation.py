@@ -1,5 +1,4 @@
 """
-<<<<<<< HEAD
 Cross-Validation script performs Two level cross-validation for model selection and 
 performace evaluation (based on algorithm 6, lecture notes)
 
@@ -18,7 +17,6 @@ Description: This script performs Two level cross-validation for model selection
              - twoLevelCV_classification() function -> Compares the three classification models using two level Cross-Validation
 
 Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
->>>>>>> upstream/master
 Created: 07.11.2020
 """
 
@@ -29,7 +27,6 @@ import numpy as np
 import torch
 
 from pca_analysis import pca_compute
-<<<<<<< HEAD
 
 # Define PCA parameters
 threshold = 0.95 
@@ -97,13 +94,7 @@ def twoLevelCV_single(xIn, yIn, model, K1, K2):
         # Trace back the model according to its CV fold index               
         print("Inner CV fold of the best model for the last loop: {0}".format(error_val.argmin()+1))
         m = model.fit(trainSetsX[error_val.argmin()], trainSetsY[error_val.argmin()])
-        
-        # ---------------------------------
-        #print(model.coef_)
-        # Still TBD
-        # m = model.fit(X_par, y_par)
-        # ---------------------------------
-        
+                
         # Compute MSE
         error_test[k1] = np.square( y_test - m.predict(X_test) ).sum()/y_test.shape[0]
         
@@ -227,7 +218,7 @@ def twoLevelCV_compare(xIn, yIn, models, K1, K2):
             (int) K1:folds in outer loop, (int) K2:folds in inner loop, 
     Output: (numpy array) estimatedGenError
     '''
-=======
+
 from regularization import rlr_validate, regmultinominal_regression
 from ANN_functions import *
 
@@ -236,7 +227,6 @@ from ANN_functions import *
 # Compare the three regression models using two level Cross-Validation
 
 def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_ann, n_replicates, max_iter, tolerance):
->>>>>>> upstream/master
     
     M = xIn.shape[1]
     CV_outer = model_selection.KFold(n_splits=K1, shuffle=True)
@@ -257,12 +247,11 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
     best_models_idx = np.empty((1, len(models)))
     estimatedGenError = np.empty((1, len(models)))
     
-<<<<<<< HEAD
-=======
+
     # r parameter for the correlated t test initialization
     r = np.empty((K1, len(models)))
     
->>>>>>> upstream/master
+
     # Outer cross-validation loop. Performance Evaluation
     k1 = 0 
     for par_index, test_index in CV_outer.split(xIn):
@@ -283,11 +272,8 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
             print("\nOuter Iteration {0}/{1} -----------------------------".format(k1+1, K1))
             print("\nInner Iteration {0}/{1} -----------------------------".format(k2+1, K2))
             
-<<<<<<< HEAD
             print("\nInner Iteration {0}/{1}".format(k2+1, K2))
             
-=======
->>>>>>> upstream/master
             # Extract train and test set for current CV fold
             X_train = X_par[train_index, :]
             y_train = y_par[train_index]       
@@ -297,13 +283,7 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
                         
             for s, model in enumerate(models):
                 
-<<<<<<< HEAD
-                m = model.fit(X_train, y_train)
-                 
-                # Compute MSEs
-                error_train[k2, s] = np.square( y_train - m.predict(X_train) ).sum() / y_train.shape[0]
-                error_val[k2, s] = np.square( y_val - m.predict(X_val) ).sum() / y_val.shape[0]
-=======
+           
                 if s == 0: # REGULARIZED LINEAR REGRESSION
                     
                     print("\nInner {}/{} - Regularized Linear Regression".format(k2+1,K2))
@@ -367,7 +347,6 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
                     # Compute MSEs
                     error_val[k2, s] = np.square( y_val - baseline_model ).sum() / y_val.shape[0]                    
                     
->>>>>>> upstream/master
                 
                 print("Validation error - Model {0}: {1}".format(s+1, np.round(error_val[k2, s], 4) ))
                 
@@ -378,17 +357,10 @@ def twoLevelCV_regression(xIn, yIn, models, K1, K2, lambdas, hidden_units, CV_an
             
             # Find the CV index of optimal models
             best_models_idx[0, s] = error_val[:, s].argmin()
-<<<<<<< HEAD
             print("Inner CV fold of the best model {0} (last loop): {1}".format(s, best_models_idx[0, s]+1))
             # Trace back the model according to its CV fold index
             m = model.fit(trainSetsX[int(best_models_idx[0, s])], trainSetsY[int(best_models_idx[0, s])])
-            
-            # ---------------------------------
-            #print(model.coef_)
-            # Still TBD
-            # m = model.fit(X_par, y_par)
-            # ---------------------------------
-            
+                        
             # Compute MSE
             error_test[k1, s] = np.square( y_test - m.predict(X_test) ).sum()/y_test.shape[0]
         
@@ -486,11 +458,6 @@ def twoLevelCV_compare_PCA(xIn, yIn, models, K1, K2):
                 
             k2 += 1
             
-        # STILL ToDo
-        # ---------------------------------
-        # Train the model on D_par & compute the error
-        # ---------------------------------
-
         for s, model in enumerate(models): 
             
             # Find the CV index of optimal model
@@ -521,7 +488,7 @@ def twoLevelCV_compare_PCA(xIn, yIn, models, K1, K2):
                 
                 # Compute MSE
                 error_test[k1, s] = np.square( y_test - m.predict(X_test) ).sum()/y_test.shape[0]
-=======
+                
             print("\n- The best model {0} was: CV number {1}".format(s+1, int(best_models_idx[0, s]+1)))
             
             if s == 0: # Save the optimal lambda of the optimal model
@@ -555,7 +522,6 @@ def twoLevelCV_compare_PCA(xIn, yIn, models, K1, K2):
         r[k1,0] = np.mean(error_test[:, 1]) - np.mean(error_test[:, 0])
         r[k1,1] = np.mean(error_test[:, 1]) - np.mean(error_test[:, 2])
         r[k1,2] = np.mean(error_test[:, 0]) - np.mean(error_test[:, 2])
->>>>>>> upstream/master
         
         k1 += 1
         print("\n")
