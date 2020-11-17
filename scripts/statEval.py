@@ -36,10 +36,11 @@ def correlated_ttest(r, rho, alpha=0.05):
 # Setup 2
 
 # Check is the correlated t-test enough,  dataset is random
-"""
+    
+
 #%% REGRESSION
 
-#_______CREATE DATASET WITH ADDED FEATURES_______
+#CREATE DATASET WITH ADDED FEATURES
 xIn, yIn = x_add_features(X_stand, y_fromStand)
 
 # Initialize 2 layer CV parameters
@@ -49,7 +50,7 @@ K2 = 5
 # Values of lambda
 lambdas = np.power(10.,np.arange(-10,10,0.5))
 # Range of hidden units
-hidden_units = np.array((1,3,6,8,11,15))
+hidden_units = np.array((1,3,6,8,11,15,20,25))
 # Parameters for ANN training part
 CV_ann = 2
 n_replicates=1
@@ -82,9 +83,9 @@ print('RLR vs. Baseline')
 p_setupII, CI_setupII = correlated_ttest(r[:,2], rho, alpha=alpha)
 print("\nP value for setup II: {0}".format(round(p_setupII, 4)))
 print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_setupII[1], 4) ))
+
+
 """
-
-
 #%% CLASSIFICATION
 
 #_______CREATE DATASET WITH ADDED FEATURES_______
@@ -130,5 +131,5 @@ print('RLR vs. Baseline')
 p_setupII, CI_setupII = correlated_ttest(r[:,2], rho, alpha=alpha)
 print("\nP value for setup II: {0}".format(round(p_setupII, 4)))
 print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_setupII[1], 4) ))
-
+"""
 

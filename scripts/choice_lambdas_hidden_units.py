@@ -10,11 +10,13 @@ import torch
 from sklearn import model_selection
 import sklearn.linear_model as lm
 from scipy import stats
-from ANN_functions import *
+import os
+# Change into working directiory & load the excell spreadsheet
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 from concNoZero_config import *
 from featureTransform import x_add_features
 from regularization import rlr_validate, regmultinominal_regression
-
+from ANN_functions import *
 
 xIn,yIn = x_add_features(X_stand, y_fromStand)
 #xIn,yIn = X_stand, y_fromStand
@@ -50,17 +52,17 @@ opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lamb
 plt.figure(1, figsize=(12,8))
 plt.subplot(1,2,1)
 plt.semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
-plt.xlabel('Regularization factor')
-plt.ylabel('Mean Coefficient Values')
+plt.xlabel('Regularization factor', fontsize = 16)
+plt.ylabel('Mean Coefficient Values', fontsize = 16)
 plt.grid()
-plt.legend(attributeNames[1:], loc='best')
+plt.legend(attributeNames[1:], loc='best', fontsize = 16)
 
 plt.subplot(1,2,2)
-plt.title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
+plt.title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)), fontsize = 16)
 plt.loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
-plt.xlabel('Regularization factor')
-plt.ylabel('Squared error (crossvalidation)')
-plt.legend(['Train error','Validation error'])
+plt.xlabel('Regularization factor', fontsize = 16)
+plt.ylabel('Squared error (crossvalidation)', fontsize = 16)
+plt.legend(['Train error','Validation error'], fontsize = 16)
 plt.grid()
 
 print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 4)))
@@ -77,17 +79,17 @@ opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lamb
 plt.figure(1, figsize=(12,8))
 plt.subplot(1,2,1)
 plt.semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
-plt.xlabel('Regularization factor')
-plt.ylabel('Mean Coefficient Values')
+plt.xlabel('Regularization factor', fontsize = 16)
+plt.ylabel('Mean Coefficient Values', fontsize = 16)
 plt.grid()
-plt.legend(attributeNames[1:], loc='best')
+plt.legend(attributeNames[1:], loc='best', fontsize = 16)
 
 plt.subplot(1,2,2)
-plt.title('Optimal lambda: 1e{0}'.format(np.round(np.log10(opt_lambda), 4)))
+plt.title('Optimal lambda: 1e{0}'.format(np.round(np.log10(opt_lambda), 4)), fontsize = 16)
 plt.loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
-plt.xlabel('Regularization factor')
-plt.ylabel('Squared error (crossvalidation)')
-plt.legend(['Train error','Validation error'])
+plt.xlabel('Regularization factor', fontsize = 16)
+plt.ylabel('Squared error (crossvalidation)', fontsize = 16)
+plt.legend(['Train error','Validation error'], fontsize = 16)
 plt.grid()
 
 print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 8)))
@@ -96,7 +98,7 @@ print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 8)))
 #%%
 #-------- ANN REGRESSION -------------------------
 # Parameters
-hidden_units = np.array((1,3,6,8,11,15))
+hidden_units = np.array((1,3,6,8,11,15,20,25))
 CV_ann = 2
 n_replicates = 1
 max_iter = 15000
@@ -105,11 +107,11 @@ tolerance = 1e-7
 opt_n_hidden_units, train_err_vs_hidden_units, test_err_vs_hidden_units = annr_validate(xIn, yIn, hidden_units, CV_ann, n_replicates=n_replicates, max_iter=max_iter, tolerance = tolerance)
 
 plt.figure(1, figsize=(8,8))
-plt.title('Optimal number of hidden units: {}'.format(opt_n_hidden_units))
+plt.title('Optimal number of hidden units: {}'.format(opt_n_hidden_units), fontsize = 16)
 plt.plot(hidden_units,train_err_vs_hidden_units.T,'b.-',hidden_units,test_err_vs_hidden_units.T,'r.-')
-plt.xlabel('Number of hidden units')
-plt.ylabel('Squared error (crossvalidation)')
-plt.legend(['Train error','Validation error'])
+plt.xlabel('Number of hidden units', fontsize = 16)
+plt.ylabel('Squared error (crossvalidation)', fontsize = 16)
+plt.legend(['Train error','Validation error'], fontsize = 16)
 plt.grid()
 print('Optimal number of hidden units: {}'.format(opt_n_hidden_units))
 
@@ -126,10 +128,10 @@ opt_n_hidden_units, train_err_vs_hidden_units, test_err_vs_hidden_units = ann_mu
 # torch.CrossEntropy: combines nn.LogSoftmax() and nn.NLLLoss() in one single class.
 
 plt.figure(1, (8,8))
-plt.title('Optimal number of hidden units: {}'.format(opt_n_hidden_units))
+plt.title('Optimal number of hidden units: {}'.format(opt_n_hidden_units), fontsize = 16)
 plt.plot(hidden_units,train_err_vs_hidden_units.T,'b.-',hidden_units,test_err_vs_hidden_units.T,'r.-')
-plt.xlabel('Number of hidden units')
-plt.ylabel('Squared error (crossvalidation)')
-plt.legend(['Train error','Validation error'])
+plt.xlabel('Number of hidden units', fontsize = 16)
+plt.ylabel('Squared error (crossvalidation)', fontsize = 16)
+plt.legend(['Train error','Validation error'], fontsize = 16)
 plt.grid()
 print('Optimal number of hidden units: {}'.format(opt_n_hidden_units))
