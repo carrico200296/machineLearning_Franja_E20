@@ -1,10 +1,17 @@
 """
-Regularization script
+Description: This script includes the functions used to regularize :
+                - The Linear Regression model: rlr_validate() function
+                - The Multinominal Logistic Regression model: regmultinominal_regression() function
 
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
 Created: 01.11.2020
 """
 import numpy as np
 from sklearn import model_selection
+import matplotlib.pyplot as plt
+from featureTransform import x_add_features
+import sklearn.linear_model as lm
+
 
 def rlr_validate(xIn, yIn, lambdas, cvf):
     
@@ -70,3 +77,44 @@ def rlr_validate(xIn, yIn, lambdas, cvf):
     mean_w_vs_lambda = np.squeeze(np.mean(w,axis=1))
     
     return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
+
+
+def regmultinominal_regression(xIn, yIn, lambdas, cvf):
+    
+    CV = model_selection.KFold(cvf, shuffle=True)
+    M = xIn.shape[1]
+    w = np.empty((M,cvf,len(lambdas)))
+    train_error = np.empty((cvf,len(lambdas)))
+    test_error = np.empty((cvf,len(lambdas)))
+    f = 0
+    yIn = yIn.squeeze()
+    
+    for train_index, test_index in CV.split(xIn,yIn):
+        
+        X_train = xIn[train_index]
+        y_train = yIn[train_index]
+        X_test = xIn[test_index]
+        y_test = yIn[test_index]
+        
+        for l in range(0,len(lambdas)):
+
+            # Fit multinomial logistic regression model
+            mdl = lm.LogisticRegression(solver='lbfgs', multi_class='multinomial', 
+                                               tol=1e-4, random_state=1, 
+                                               penalty='l2', C=1/lambdas[l], max_iter=1000)
+            mdl.fit(X_train,y_train)
+            
+            # Evaluate training and test performance
+            train_error[f,l] = np.sum(mdl.predict(X_train)!=y_train) / len(y_train)
+            test_error[f,l] = np.sum(mdl.predict(X_test)!=y_test) / len(y_test)
+            w[:,f,l] = mdl.coef_[0] # Nice...
+        f=f+1
+
+    opt_val_err = np.min(np.mean(test_error,axis=0))
+    opt_lambda = lambdas[np.argmin(np.mean(test_error,axis=0))]
+    train_err_vs_lambda = np.mean(train_error,axis=0)
+    test_err_vs_lambda = np.mean(test_error,axis=0)
+    mean_w_vs_lambda = np.squeeze(np.mean(w,axis=1))
+    
+    return opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda
+
