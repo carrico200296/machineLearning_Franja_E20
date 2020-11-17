@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
 """
-Created on Thu Nov 12 2020
+Description: This script has the functions used to optain the optimal number of hidden units for:
+                - ANN regression: annr_validate() function
+                - ANN classification: ann_multiclass_validate() function
 
-@author: 
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
+Created: 08.11.2020
 """
 
 import torch
@@ -34,10 +36,6 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter, tolerance):
             model = lambda: torch.nn.Sequential(
                                 torch.nn.Linear(M, hidden_units[i]),
                                 torch.nn.Tanh(),
-                                #torch.nn.Dropout(p=0.5),
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(hidden_units[i], hidden_units[i]),
-                                #torch.nn.Tanh(), 
                                 torch.nn.Linear(hidden_units[i], 1),
                                 )
 
