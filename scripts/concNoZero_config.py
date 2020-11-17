@@ -1,38 +1,54 @@
 """
 Process concNoZero data set config file.
 
-Usage: Can be used only if the number of attributes remain constant or changed inside the flow.
+Usage: Import loadDataSet.py and use dedicated functions from preProcessing.py to process data.
+Can be used only if the number of attributes remain constant or changed inside the flow.
 Must start from RAW data set!
-Input: loadDataSet.py and preProcessing.py 
+Input: See preProcessing.py
 Output: Processed data and statistical tables. Final output depends on the process flow.
 
 Authors: Vice Roncevic - s190075, Carlos Ribera - S192340, Mu Zhou - s202718
 Created: 03.10.2020
+Edited: 04.11.2020
 """
 
 from preProcessing import *
 from loadDataSet import *
 
-# Import and process RAW data
-xRaw = X
-yRaw = y
+# -------------------------------------------------------
+# Step 1: Import RAW data
+xIn = X
+yIn = y
 
-X_cent, y_cent, X_stand, y_stand, classNames, y_class, y_class_encoding, X_noZeros, y_noZeros, X_noOut, y_noOut, M, N, C = pre_process(xRaw, yRaw, attributeNames, outputAttribute)
-basic_statistics_x, basic_statistics_y = sum_stat(xRaw, yRaw, attributeNames, outputAttribute)
+# -------------------------------------------------------
+# Remove zeros
+X_noZeros, y_noZeros, M, N, C = remove_zeros(xIn, yIn, attributeNames)
 
-# Process NO_ZERO data
+# -------------------------------------------------------
+# Step 2 input
 xIn = X_noZeros
 yIn = y_noZeros
 
-X_cent, y_cent, X_stand, y_stand, classNames, y_class, y_class_encoding, X_noZeros, y_noZeros, X_noOut, y_noOut,  M, N, C = pre_process(xIn, yIn, attributeNames, outputAttribute)
-basic_statistics_x, basic_statistics_y = sum_stat(xIn, yIn, attributeNames, outputAttribute)
+# Remove outliers
+X_noOut, y_noOut, M, N, C = remove_outliers(xIn, yIn, N, attributeNames)
 
-# Process NO_ZERO_OUT data
+# -------------------------------------------------------
+# Step 3 input
 xIn = X_noOut
 yIn = y_noOut
 
-X_cent, y_cent, X_stand, y_stand, classNames, y_class, y_class_encoding, X_noZeros, y_noZeros, X_noOut, y_noOut,  M, N, C = pre_process(xIn, yIn, attributeNames, outputAttribute)
-basic_statistics_x, basic_statistics_y = sum_stat(xIn, yIn, attributeNames, outputAttribute)
+# -------------------------------------------------------
+# Centralize and standardize the data
+X_cent, X_stand, y_fromStand, M, N, C = cent_and_stand(xIn, yIn, N, attributeNames)
+
+# -------------------------------------------------------
+# Step 4 input
+xIn = X_stand
+yIn = y_fromStand
+
+# -------------------------------------------------------
+# Create classes
+classNames, y_class, y_class_encoding, M, N, C = class_threshold (xIn, yIn, attributeNames, outputAttribute)
 
 
 
