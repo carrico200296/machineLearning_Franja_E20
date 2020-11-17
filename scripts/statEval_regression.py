@@ -38,7 +38,7 @@ K2 = 5
 # Values of lambda
 lambdas = np.power(10.,np.arange(-10,10,0.5))
 # Range of hidden units
-hidden_units = np.array((1,3,6,8,11,15))
+hidden_units = np.array((1,3,6,8,11,15,20,25))
 # Parameters for ANN training part
 CV_ann = 2
 n_replicates=1

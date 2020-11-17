@@ -35,7 +35,7 @@ def annr_validate(xIn, yIn, hidden_units, K, n_replicates, max_iter, tolerance):
             # Define the model
             model = lambda: torch.nn.Sequential(
                                 torch.nn.Linear(M, hidden_units[i]),
-                                torch.nn.Tanh(),
+                                torch.nn.Tanhshrink(),
                                 torch.nn.Linear(hidden_units[i], 1),
                                 )
 
@@ -92,7 +92,7 @@ def ann_multiclass_validate(xIn, yIn, C, hidden_units, K, n_replicates, max_iter
         for i in range(0,len(hidden_units)):
             # Define the model
             model = lambda: torch.nn.Sequential(torch.nn.Linear(M, hidden_units[i]), 
-                                                torch.nn.Tanh(),
+                                                torch.nn.Tanhshrink(),
                                                 torch.nn.Linear(hidden_units[i], C), 
                                                 torch.nn.Softmax(dim=1)
                                                 )

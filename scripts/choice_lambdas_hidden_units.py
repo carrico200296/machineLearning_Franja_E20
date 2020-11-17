@@ -97,7 +97,7 @@ print("Optimal regularization strenght is: {0}".format(round(opt_lambda, 8)))
 #%%
 #-------- ANN REGRESSION -------------------------
 # Parameters
-hidden_units = np.array((1,3,6,8,11,15))
+hidden_units = np.array((1,3,6,8,11,15,20,25))
 CV_ann = 2
 n_replicates = 1
 max_iter = 15000

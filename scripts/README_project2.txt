@@ -1,5 +1,5 @@
 Readme file - Project 2
-Authors: Vice Roncevic - s190075, Carlos Ribera - s192340
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
 Created: 16.11.2020
 
 IMPORTANT: All scripts, text files and data set files are to be kept in the same working directory.
