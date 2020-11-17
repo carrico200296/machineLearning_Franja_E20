@@ -1,12 +1,10 @@
 """
-Statistical evaluation
+Statistical evaluation for Classification problem 
 
-Usage: This script is using the two layer CV output to perform statistical performance evaluation 
-of various methods. It also introduces baseline models for comparrison. The comparison is to be made pairwise.              
-Input: 
-Output: 
+Description: This script is using the two layer CV output to perform statistical performance evaluation of the three classification models.
+             MODELS: Regularized Multinominal Logistic Regression, ANN MultiClassification, Baseline
 
-Authors: Vice Roncevic - s190075, Carlos Ribera - S192340, Mu Zhou - s202718
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
 Created: 10.11.2020
 """
 
@@ -29,6 +27,7 @@ def correlated_ttest(r, rho, alpha=0.05):
     p = 2*st.t.cdf(-np.abs(rhat) / sigmatilde, df=J - 1)  # p-value
     return p, CI
 
+<<<<<<< HEAD:scripts/statEval.py
 # Setup 1
 
 # See box 11.3.4 and modify Jeffry interval to accomodate two regression models
@@ -87,6 +86,8 @@ print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_s
 
 """
 #%% CLASSIFICATION
+=======
+>>>>>>> 6f7fca83a82fee4fca74e667df07254e8f5a960b:scripts/statEval_classification.py
 
 #_______CREATE DATASET WITH ADDED FEATURES_______
 xIn, yIn = x_add_features(X_stand, y_class)
@@ -131,5 +132,8 @@ print('RLR vs. Baseline')
 p_setupII, CI_setupII = correlated_ttest(r[:,2], rho, alpha=alpha)
 print("\nP value for setup II: {0}".format(round(p_setupII, 4)))
 print("CI setup II: from {0} to {1}:".format(round(CI_setupII[0], 4), round(CI_setupII[1], 4) ))
+<<<<<<< HEAD:scripts/statEval.py
 """
 
+=======
+>>>>>>> 6f7fca83a82fee4fca74e667df07254e8f5a960b:scripts/statEval_classification.py

@@ -1,6 +1,9 @@
 """
-Regularization script
+Description: This script includes the functions used to regularize :
+                - The Linear Regression model: rlr_validate() function
+                - The Multinominal Logistic Regression model: regmultinominal_regression() function
 
+Authors: Vice Roncevic - s190075, Carlos Ribera - S192340
 Created: 01.11.2020
 """
 import numpy as np
